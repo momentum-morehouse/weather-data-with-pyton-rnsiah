@@ -29,12 +29,32 @@ def buildPlace(list):
 places = buildPlace(place_list)
 
 
-def get_Weather(lat, lon):
+
+
+
+def get_Weather(locations):
     url = 'https://api.climacell.co/v3/weather/realtime'
-    payload = {
-        "apikey": "ekQTVNXcywUsz7LDWg7w9fGwNl87yCl2",
-        "lat": Place.lat,
-        "lon": Place.lon,
-        "fields": ["temp", "precipitation", "wind_gust"],
-        "unit_system": "us",
-    }
+    locationList = {}
+    for location in locations:
+
+      payload = {
+          "apikey": "ekQTVNXcywUsz7LDWg7w9fGwNl87yCl2",
+          "lat": location.lat,
+          "lon": location.lon,
+          "fields": ["temp", "precipitation", "wind_gust"],
+          "unit_system": "us",
+      }
+      response= requests.get(url, params=payload).json()
+      print(response['temp']['value'])
+
+      locationList[location.name] = response['temp']['value']
+
+    print(locationList)
+    return locationList 
+    
+
+
+weather = get_Weather(places)
+
+for city, temp in weather.items():
+  print(f" The temperature in {city} is {temp}")
